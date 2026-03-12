@@ -1,0 +1,80 @@
+{
+  "site": {
+    "name": "فستیوو",
+    "tagline": "یونیورسٹی ایونٹس کا دروازہ",
+    "description": "یونیورسٹی ایونٹس کو آسانی سے ڈھونڈیں، شرکت کریں اور ان کا انتظام کریں"
+  },
+  "nav": {
+    "home": "ہوم",
+    "events": "ایونٹس",
+    "about": "ہمارے بارے میں",
+    "pricing": "قیمت",
+    "contact": "رابطہ کریں",
+    "login": "سائن ان",
+    "register": "رجسٹر",
+    "dashboard": "ڈیش بورڈ"
+  },
+  "auth": {
+    "signIn": "سائن ان کریں",
+    "signUp": "رجسٹر کریں",
+    "signOut": "سائن آؤٹ",
+    "email": "ای میل",
+    "password": "پاس ورڈ",
+    "forgotPassword": "پاس ورڈ بھول گئے؟",
+    "resetPassword": "پاس ورڈ ری سیٹ کریں",
+    "rememberMe": "مجھے یاد رکھیں",
+    "noAccount": "اکاؤنٹ نہیں ہے؟",
+    "hasAccount": "پہلے سے اکاؤنٹ ہے؟"
+  },
+  "events": {
+    "title": "ایونٹس",
+    "discover": "ایونٹس تلاش کریں",
+    "create": "ایونٹ بنائیں",
+    "myEvents": "میرے ایونٹس",
+    "upcoming": "آنے والے",
+    "past": "گزرے ہوئے ایونٹس",
+    "search": "ایونٹس تلاش کریں...",
+    "filter": "فلٹر",
+    "register": "ابھی رجسٹر کریں",
+    "details": "ایونٹ کی تفصیلات",
+    "attendees": "شرکت کرنے والے",
+    "tickets": "ٹکٹیں",
+    "venue": "مقام",
+    "date": "تاریخ",
+    "time": "وقت",
+    "price": "قیمت",
+    "free": "مفت",
+    "category": "زمرہ"
+  },
+  "dashboard": {
+    "welcome": "خوش آمدید!",
+    "overview": "جائزہ",
+    "analytics": "اینالٹکس",
+    "tickets": "میری ٹکٹیں",
+    "profile": "پروفائل",
+    "settings": "ترتیبات",
+    "notifications": "نوٹیفکیشنز",
+    "certificates": "سرٹیفکیٹس"
+  },
+  "common": {
+    "save": "محفوظ کریں",
+    "cancel": "منسوخ کریں",
+    "delete": "حذف کریں",
+    "edit": "ترمیم کریں",
+    "create": "بنائیں",
+    "update": "اپ ڈیٹ کریں",
+    "submit": "جمع کروائیں",
+    "loading": "لوڈ ہو رہا ہے...",
+    "error": "خرابی",
+    "success": "کامیابی",
+    "confirm": "تصدیق کریں",
+    "close": "بند کریں",
+    "search": "تلاش کریں",
+    "filter": "فلٹر",
+    "sort": "ترتیب",
+    "viewAll": "سب دیکھیں",
+    "viewMore": "مزید دیکھیں",
+    "learnMore": "مزید سیکھیں",
+    "getStarted": "شروع کریں"
+  }
+}

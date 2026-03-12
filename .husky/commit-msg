@@ -1,0 +1,39 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Commit message format pattern
+# Valid formats:
+# - [TYPE] description
+# - type(scope): description
+#
+# Types: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert
+
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# Pattern to match conventional commits
+# Examples:
+# - [feat] add new authentication system
+# - feat(auth): add OAuth support
+# - fix(api): resolve payment processing bug
+PATTERN="^(\[([a-z]+)\]|([a-z]+)(\([^)]+\))?): .+"
+
+if ! echo "$COMMIT_MSG" | grep -qE "$PATTERN"; then
+  echo "❌ Invalid commit message format!"
+  echo ""
+  echo "Commit messages must follow one of these formats:"
+  echo "  - [TYPE] description"
+  echo "  - type(scope): description"
+  echo ""
+  echo "Valid types: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert"
+  echo ""
+  echo "Examples:"
+  echo "  ✅ [feat] add user authentication"
+  echo "  ✅ feat(api): add payment processing"
+  echo "  ✅ fix(auth): resolve login bug"
+  echo "  ❌ added new feature"
+  echo ""
+  exit 1
+fi
+
+echo "✅ Commit message format validated!"

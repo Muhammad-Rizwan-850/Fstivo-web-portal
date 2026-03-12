@@ -1,0 +1,162 @@
+/**
+ * Supabase Mock Factory
+ * ─────────────────────
+ * Audit: "Incomplete Supabase client typing/mocks — makes testing risky."
+ *
+ * This is a comprehensive mock that covers:
+ *   • from() → select/insert/update/delete chains
+ *   • auth.getUser() / signInWithPassword / signUp
+ *   • channel() → on() → subscribe() (realtime)
+ *   • storage.from() → upload/download
+ *   • rpc() calls
+ *
+ * Usage in tests:
+ *
+ *   import { createClient } from '@supabase/supabase-js';
+ *   import { mockSupabaseQuery } from '@/__mocks__/@supabase/supabase-js';
+ *
+ *   const supabase = createClient('url', 'key');
+ *   mockSupabaseQuery(supabase, 'events', [{ id: '1', title: 'Test Event' }]);
+ *
+ *   const { data } = await supabase.from('events').select('*');
+ *   expect(data).toEqual([{ id: '1', title: 'Test Event' }]);
+ */
+
+interface MockData {
+  data?: any;
+  error?: any;
+  count?: number;
+}
+
+const mockDatabase: Record<string, any[]> = {};
+
+/* ── Query builder mock ────────────────────────────────────────────────── */
+class MockQueryBuilder {
+  private table: string;
+  private response: MockData = { data: null, error: null };
+  private filters: Array<{ column: string; value: any }> = [];
+
+  constructor(table: string) {
+    this.table = table;
+  }
+
+  select(_cols?: string) {
+    return this;
+  }
+
+  insert(rows: any | any[]) {
+    const arr = Array.isArray(rows) ? rows : [rows];
+    mockDatabase[this.table] = [...(mockDatabase[this.table] ?? []), ...arr];
+    this.response.data = arr;
+    return this;
+  }
+
+  update(_values: any) {
+    return this;
+  }
+
+  delete() {
+    return this;
+  }
+
+  eq(column: string, value: any) {
+    this.filters.push({ column, value });
+    return this;
+  }
+
+  single() {
+    return this;
+  }
+
+  private applyFilters(data: any[]) {
+    return this.filters.reduce((filtered, filter) => {
+      return filtered.filter(item => item[filter.column] === filter.value);
+    }, data);
+  }
+
+  async then<R>(
+    onfulfilled?: (value: MockData) => R | PromiseLike<R>,
+    onrejected?: ((reason: any) => any) | undefined
+  ): Promise<R> {
+    const filteredData = this.applyFilters(mockDatabase[this.table] ?? []);
+    return Promise.resolve({ ...this.response, data: filteredData } as any).then(onfulfilled, onrejected);
+  }
+
+  catch<R>(
+    onrejected?: ((reason: any) => R | PromiseLike<R>)
+  ): Promise<MockData | R> {
+    return Promise.resolve(this.response).catch(onrejected);
+  }
+}
+
+/* ── Auth mock ─────────────────────────────────────────────────────────── */
+const mockAuthResponse = {
+  data: {
+    user: {
+      id: 'test-user-id',
+      email: 'test@example.com',
+      aud: 'authenticated',
+      role: 'authenticated',
+    },
+  },
+  error: null,
+};
+
+const mockAuth = {
+  getUser: jest.fn(() => Promise.resolve(mockAuthResponse)),
+  signInWithPassword: jest.fn(() => Promise.resolve(mockAuthResponse)),
+  signUp: jest.fn(() => Promise.resolve(mockAuthResponse)),
+  signOut: jest.fn(() => Promise.resolve({ error: null })),
+  onAuthStateChange: jest.fn(() => ({ data: { subscription: { unsubscribe: jest.fn() } } })),
+};
+
+/* ── Realtime mock ─────────────────────────────────────────────────────── */
+// Define the type first to avoid circular reference
+interface MockChannel {
+  on: jest.Mock | ((event: string, callback: Function) => MockChannel);
+  subscribe: jest.Mock | (() => MockChannel);
+  unsubscribe: jest.Mock | (() => Promise<void>);
+}
+
+const mockChannel: MockChannel = {
+  on: jest.fn(() => mockChannel as any),
+  subscribe: jest.fn(() => mockChannel as any),
+  unsubscribe: jest.fn(() => Promise.resolve()),
+};
+
+const mockRealtime = {
+  channel: jest.fn(() => mockChannel),
+};
+
+/* ── Storage mock ──────────────────────────────────────────────────────── */
+const mockStorage = {
+  from: jest.fn(() => ({
+    upload: jest.fn(() => Promise.resolve({ data: { path: 'test.jpg' }, error: null })),
+    download: jest.fn(() => Promise.resolve({ data: new Blob(), error: null })),
+    remove: jest.fn(() => Promise.resolve({ data: null, error: null })),
+    getPublicUrl: jest.fn(() => ({ data: { publicUrl: 'https://test.jpg' } })),
+  })),
+};
+
+/* ── RPC mock ─────────────────────────────────────────────────────────── */
+const mockRpc = jest.fn(() => Promise.resolve({ data: null, error: null }));
+
+/* ── Main client ───────────────────────────────────────────────────────── */
+export const createClient = jest.fn(() => ({
+  from: (table: string) => new MockQueryBuilder(table),
+  auth: mockAuth,
+  channel: mockRealtime.channel,
+  storage: mockStorage,
+  rpc: mockRpc,
+}));
+
+/* ── Helper for tests ─────────────────────────────────────────────────── */
+export function mockSupabaseQuery(client: any, table: string, data: any[]) {
+  mockDatabase[table] = data;
+}
+
+export function resetMockDatabase() {
+  Object.keys(mockDatabase).forEach(k => delete mockDatabase[k]);
+}
+
+export { mockAuth, mockChannel, mockStorage, mockRpc };

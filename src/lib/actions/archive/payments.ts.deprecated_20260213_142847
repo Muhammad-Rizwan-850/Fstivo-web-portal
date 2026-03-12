@@ -1,0 +1,223 @@
+'use server';
+
+import { revalidatePath } from 'next/cache';
+import { createClient } from '@/lib/supabase/server';
+import Stripe from 'stripe';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+  apiVersion: '2024-11-20.acacia' as any,
+});
+
+// =====================================================
+// PAYMENT ACTIONS
+// =====================================================
+
+export async function createPaymentIntent(orderId: string) {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: 'Unauthorized' };
+  }
+
+  // Get order details
+  const { data: order, error: orderError } = await supabase
+    .from('orders')
+    .select('*, event:events(title)')
+    .eq('id', orderId)
+    .eq('user_id', user.id)
+    .single();
+
+  if (orderError || !order) {
+    return { error: 'Order not found' };
+  }
+
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: Math.round(order.total * 100), // Convert to cents
+      currency: 'pkr',
+      metadata: {
+        order_id: orderId,
+        user_id: user.id,
+        event_id: order.event_id,
+      },
+      description: 'Tickets for ' + order.event.title,
+    });
+
+    // Update order with payment intent
+    await supabase
+      .from('orders')
+      .update({ 
+        stripe_payment_intent_id: paymentIntent.id,
+        payment_method: 'stripe' 
+      })
+      .eq('id', orderId);
+
+    return { 
+      success: true, 
+      clientSecret: paymentIntent.client_secret 
+    };
+  } catch (error: any) {
+    return { error: error.message };
+  }
+}
+
+export async function confirmPayment(orderId: string, paymentIntentId: string) {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: 'Unauthorized' };
+  }
+
+  try {
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+
+    if (paymentIntent.status === 'succeeded') {
+      // Update order status
+      await supabase
+        .from('orders')
+        .update({
+          status: 'completed',
+          paid_at: new Date().toISOString(),
+        })
+        .eq('id', orderId);
+
+      // Update tickets status
+      await supabase
+        .from('tickets')
+        .update({ status: 'active' })
+        .eq('order_id', orderId);
+
+      revalidatePath('/dashboard/tickets');
+      return { success: true };
+    }
+
+    return { error: 'Payment not completed' };
+  } catch (error: any) {
+    return { error: error.message };
+  }
+}
+
+export async function processRefund(orderId: string) {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: 'Unauthorized' };
+  }
+
+  const { data: order } = await supabase
+    .from('orders')
+    .select('*')
+    .eq('id', orderId)
+    .eq('user_id', user.id)
+    .single();
+
+  if (!order || !order.stripe_payment_intent_id) {
+    return { error: 'Order not found or not paid' };
+  }
+
+  try {
+    const refund = await stripe.refunds.create({
+      payment_intent: order.stripe_payment_intent_id,
+    });
+
+    await supabase
+      .from('orders')
+      .update({
+        status: 'refunded',
+        refunded_at: new Date().toISOString(),
+      })
+      .eq('id', orderId);
+
+    await supabase
+      .from('tickets')
+      .update({ status: 'refunded' })
+      .eq('order_id', orderId);
+
+    revalidatePath('/dashboard/tickets');
+    return { success: true, refund };
+  } catch (error: any) {
+    return { error: error.message };
+  }
+}
+
+export async function createJazzCashPayment(orderId: string) {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: 'Unauthorized' };
+  }
+
+  const { data: order } = await supabase
+    .from('orders')
+    .select('*')
+    .eq('id', orderId)
+    .eq('user_id', user.id)
+    .single();
+
+  if (!order) {
+    return { error: 'Order not found' };
+  }
+
+  // TODO: Implement JazzCash integration
+  // This requires merchant credentials and API setup
+
+  return { 
+    success: true, 
+    message: 'JazzCash payment initiated',
+    redirectUrl: '/payment/jazzcash/process' 
+  };
+}
+
+export async function createEasyPaisaPayment(orderId: string) {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: 'Unauthorized' };
+  }
+
+  const { data: order } = await supabase
+    .from('orders')
+    .select('*')
+    .eq('id', orderId)
+    .eq('user_id', user.id)
+    .single();
+
+  if (!order) {
+    return { error: 'Order not found' };
+  }
+
+  // TODO: Implement EasyPaisa integration
+  // This requires store credentials and API setup
+
+  return { 
+    success: true, 
+    message: 'EasyPaisa payment initiated',
+    redirectUrl: '/payment/easypaisa/process' 
+  };
+}
+
+export async function getPaymentMethods() {
+  const supabase = createClient();
+
+  // Return available payment methods based on env config
+  const methods = [];
+
+  if (process.env.STRIPE_SECRET_KEY) {
+    methods.push({ id: 'stripe', name: 'Credit/Debit Card', icon: '💳' });
+  }
+
+  if (process.env.JAZZCASH_MERCHANT_ID) {
+    methods.push({ id: 'jazzcash', name: 'JazzCash', icon: '📱' });
+  }
+
+  if (process.env.EASYPAISA_STORE_ID) {
+    methods.push({ id: 'easypaisa', name: 'EasyPaisa', icon: '💰' });
+  }
+
+  return { success: true, methods };
+}

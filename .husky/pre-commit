@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Running pre-commit checks..."
+
+# Run linting
+echo "📋 Running ESLint..."
+npm run lint -- --fix
+
+# Run TypeScript check
+echo "📘 Running TypeScript check..."
+npm run typecheck
+
+# Run unit tests (if any exist)
+if [ -d "tests/unit" ] && [ "$(ls -A tests/unit)" ]; then
+  echo "🧪 Running unit tests..."
+  npm run test:unit -- --passWithNoTests
+else
+  echo "⚠️  No unit tests found, skipping..."
+fi
+
+echo "✅ Pre-commit checks passed!"

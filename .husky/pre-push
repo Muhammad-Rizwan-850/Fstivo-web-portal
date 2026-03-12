@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🚀 Running pre-push checks..."
+
+# Run full test suite
+echo "🧪 Running full test suite..."
+npm run test:unit -- --passWithNoTests
+
+if [ -d "tests/integration" ] && [ "$(ls -A tests/integration)" ]; then
+  echo "🔗 Running integration tests..."
+  npm run test:integration -- --passWithNoTests
+fi
+
+# Run build to ensure no build errors
+echo "🏗️  Running production build..."
+npm run build
+
+echo "✅ Pre-push checks passed! Ready to push."

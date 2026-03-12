@@ -1,0 +1,39 @@
+{
+  "name": "FSTIVO Event Management",
+  "short_name": "FSTIVO",
+  "description": "Pakistan's Premier Event Management Platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/brand/fstivo-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/brand/fstivo-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "categories": ["entertainment", "events", "social"],
+  "shortcuts": [
+    {
+      "name": "My Tickets",
+      "short_name": "Tickets",
+      "description": "View your event tickets",
+      "url": "/tickets"
+    },
+    {
+      "name": "Upcoming Events",
+      "short_name": "Events",
+      "description": "Browse upcoming events",
+      "url": "/events"
+    }
+  ]
+}

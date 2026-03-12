@@ -1,0 +1,16 @@
+<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Fstivo icon">
+  <defs>
+    <linearGradient id="fstivo-icon-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E94C89" />
+      <stop offset="100%" stop-color="#9B4FCC" />
+    </linearGradient>
+  </defs>
+
+  <!-- Stylized "F" -->
+  <path d="M10 8 L10 32 M10 8 L28 8 M10 20 L24 20" stroke="url(#fstivo-icon-gradient)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+
+  <!-- Dots -->
+  <circle cx="32" cy="12" r="2" fill="#E94C89" />
+  <circle cx="32" cy="20" r="1.5" fill="#D4498E" />
+  <circle cx="32" cy="26" r="1" fill="#9B4FCC" />
+</svg>

@@ -1,0 +1,172 @@
+# =====================================================
+# Deploy to Production
+# =====================================================
+# This workflow builds and deploys the application to production
+# =====================================================
+
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Set environment variables
+env:
+  NODE_VERSION: '18'
+  NPM_VERSION: '9'
+
+jobs:
+  # =====================================================
+  # Build and Test Job
+  # =====================================================
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run type check
+        run: npm run typecheck
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Run unit tests
+        run: npm test -- --passWithNoTests
+
+      - name: Build application
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-output
+          path: .next
+          retention-days: 1
+
+  # =====================================================
+  # Deploy to Vercel Job
+  # =====================================================
+  deploy-vercel:
+    name: Deploy to Vercel
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Project Artifacts
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy to Vercel
+        id: deploy
+        run: |
+          url=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$url" >> $GITHUB_OUTPUT
+
+      - name: Comment deployment URL on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🚀 Deployed to: ${{ steps.deploy.outputs.url }}'
+            })
+
+  # =====================================================
+  # Run E2E Tests Job
+  # =====================================================
+  e2e-tests:
+    name: E2E Tests
+    needs: deploy-vercel
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+        env:
+          PLAYWRIGHT_TEST_BASE_URL: ${{ secrets.PRODUCTION_URL }}
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  # =====================================================
+  # Notify Success Job
+  # =====================================================
+  notify-success:
+    name: Notify Success
+    needs: [build-and-test, deploy-vercel, e2e-tests]
+    runs-on: ubuntu-latest
+    if: success()
+    
+    steps:
+      - name: Send Slack notification
+        if: vars.SLACK_WEBHOOK_URL != ''
+        run: |
+          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "text": "✅ FSTIVO deployed successfully!",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Production Deploy Successful*\n*Commit:* ${{ github.sha }}\n*Author:* ${{ github.actor }}\n*URL:* https://fstivo.com"
+                  }
+                }
+              ]
+            }'

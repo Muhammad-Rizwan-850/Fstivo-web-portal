@@ -1,0 +1,220 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e5]:
+        - link "Fstivo" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - img "Fstivo" [ref=e8]
+        - generic [ref=e10]:
+          - link "Events" [ref=e11] [cursor=pointer]:
+            - /url: /events
+            - img [ref=e12]
+            - text: Events
+          - link "Jobs" [ref=e14] [cursor=pointer]:
+            - /url: /jobs
+            - img [ref=e15]
+            - text: Jobs
+          - link "Verify Certificate" [ref=e18] [cursor=pointer]:
+            - /url: /verify
+            - img [ref=e19]
+            - text: Verify Certificate
+          - link "Features" [ref=e21] [cursor=pointer]:
+            - /url: /features
+            - img [ref=e22]
+            - text: Features
+          - link "Pricing" [ref=e24] [cursor=pointer]:
+            - /url: /pricing
+            - img [ref=e25]
+            - text: Pricing
+          - link "About" [ref=e27] [cursor=pointer]:
+            - /url: /about
+            - img [ref=e28]
+            - text: About
+        - generic [ref=e33]:
+          - link "Sign In" [ref=e34] [cursor=pointer]:
+            - /url: /sign-in
+          - link "Get Started" [ref=e35] [cursor=pointer]:
+            - /url: /sign-up
+    - main [ref=e36]:
+      - generic [ref=e37]:
+        - generic [ref=e39]:
+          - heading "Discover Amazing Events" [level=1] [ref=e40]
+          - paragraph [ref=e41]: Find conferences, workshops, and networking events near you
+          - generic [ref=e42]:
+            - img [ref=e43]
+            - textbox "Search events, topics, or organizers..." [ref=e46]
+            - button "Search" [ref=e47] [cursor=pointer]
+          - generic [ref=e48]:
+            - button "Filters" [ref=e49] [cursor=pointer]:
+              - img [ref=e50]
+              - text: Filters
+              - img [ref=e52]
+            - button "💻 Technology" [ref=e54] [cursor=pointer]
+            - button "💼 Business" [ref=e55] [cursor=pointer]
+            - button "🏥 Healthcare" [ref=e56] [cursor=pointer]
+            - button "⚙️ Engineering" [ref=e57] [cursor=pointer]
+            - button "🎨 Arts & Design" [ref=e58] [cursor=pointer]
+        - generic [ref=e60]:
+          - generic [ref=e64]:
+            - generic [ref=e65]:
+              - img [ref=e66]
+              - heading "Filters" [level=3] [ref=e68]
+            - button [ref=e69] [cursor=pointer]:
+              - img [ref=e70]
+          - generic [ref=e72]:
+            - generic [ref=e73]:
+              - paragraph [ref=e74]: 5 events found
+              - combobox [ref=e75]:
+                - option "Sort by Date" [selected]
+                - option "Sort by Price"
+                - option "Sort by Popularity"
+            - generic [ref=e76]:
+              - link "Tech Summit 2024 📅 conference Tech Summit 2024 Annual tech conference Mar 19, 2026 • 01:59 PM Convention Center, Lahore 0 registered • 500 capacity 0% full Starting from ₨5,000 View Details" [ref=e77] [cursor=pointer]:
+                - /url: /events/1
+                - generic [ref=e78]:
+                  - img "Tech Summit 2024" [ref=e79]
+                  - generic [ref=e80]: 📅 conference
+                - generic [ref=e81]:
+                  - heading "Tech Summit 2024" [level=3] [ref=e82]
+                  - paragraph [ref=e83]: Annual tech conference
+                  - generic [ref=e84]:
+                    - generic [ref=e85]:
+                      - img [ref=e86]
+                      - text: Mar 19, 2026
+                      - generic [ref=e88]: •
+                      - text: 01:59 PM
+                    - generic [ref=e89]:
+                      - img [ref=e90]
+                      - text: Convention Center, Lahore
+                    - generic [ref=e93]:
+                      - img [ref=e94]
+                      - text: 0 registered
+                      - generic [ref=e99]: •
+                      - text: 500 capacity
+                  - generic [ref=e102]: 0% full
+                  - generic [ref=e104]:
+                    - generic [ref=e105]:
+                      - paragraph [ref=e106]: Starting from
+                      - paragraph [ref=e107]: ₨5,000
+                    - generic [ref=e108]: View Details
+              - link "Startup Pitch Night 📅 workshop Startup Pitch Night Pitch your startup Mar 26, 2026 • 01:59 PM Tech Hub, Karachi 0 registered • 200 capacity 0% full Starting from ₨1,000 View Details" [ref=e109] [cursor=pointer]:
+                - /url: /events/2
+                - generic [ref=e110]:
+                  - img "Startup Pitch Night" [ref=e111]
+                  - generic [ref=e112]: 📅 workshop
+                - generic [ref=e113]:
+                  - heading "Startup Pitch Night" [level=3] [ref=e114]
+                  - paragraph [ref=e115]: Pitch your startup
+                  - generic [ref=e116]:
+                    - generic [ref=e117]:
+                      - img [ref=e118]
+                      - text: Mar 26, 2026
+                      - generic [ref=e120]: •
+                      - text: 01:59 PM
+                    - generic [ref=e121]:
+                      - img [ref=e122]
+                      - text: Tech Hub, Karachi
+                    - generic [ref=e125]:
+                      - img [ref=e126]
+                      - text: 0 registered
+                      - generic [ref=e131]: •
+                      - text: 200 capacity
+                  - generic [ref=e134]: 0% full
+                  - generic [ref=e136]:
+                    - generic [ref=e137]:
+                      - paragraph [ref=e138]: Starting from
+                      - paragraph [ref=e139]: ₨1,000
+                    - generic [ref=e140]: View Details
+              - link "AI Workshop Series 📅 workshop AI Workshop Series AI/ML workshop Apr 2, 2026 • 01:59 PM Virtual Event 0 registered • 100 capacity 0% full Starting from ₨2,500 View Details" [ref=e141] [cursor=pointer]:
+                - /url: /events/3
+                - generic [ref=e142]:
+                  - img "AI Workshop Series" [ref=e143]
+                  - generic [ref=e144]: 📅 workshop
+                - generic [ref=e145]:
+                  - heading "AI Workshop Series" [level=3] [ref=e146]
+                  - paragraph [ref=e147]: AI/ML workshop
+                  - generic [ref=e148]:
+                    - generic [ref=e149]:
+                      - img [ref=e150]
+                      - text: Apr 2, 2026
+                      - generic [ref=e152]: •
+                      - text: 01:59 PM
+                    - generic [ref=e153]:
+                      - img [ref=e154]
+                      - text: Virtual Event
+                    - generic [ref=e157]:
+                      - img [ref=e158]
+                      - text: 0 registered
+                      - generic [ref=e163]: •
+                      - text: 100 capacity
+                  - generic [ref=e166]: 0% full
+                  - generic [ref=e168]:
+                    - generic [ref=e169]:
+                      - paragraph [ref=e170]: Starting from
+                      - paragraph [ref=e171]: ₨2,500
+                    - generic [ref=e172]: View Details
+              - link "Digital Health Conference 📅 conference Digital Health Conference Health tech event Apr 11, 2026 • 01:59 PM Medical Center, Islamabad 0 registered • 500 capacity 0% full Starting from ₨4,000 View Details" [ref=e173] [cursor=pointer]:
+                - /url: /events/4
+                - generic [ref=e174]:
+                  - img "Digital Health Conference" [ref=e175]
+                  - generic [ref=e176]: 📅 conference
+                - generic [ref=e177]:
+                  - heading "Digital Health Conference" [level=3] [ref=e178]
+                  - paragraph [ref=e179]: Health tech event
+                  - generic [ref=e180]:
+                    - generic [ref=e181]:
+                      - img [ref=e182]
+                      - text: Apr 11, 2026
+                      - generic [ref=e184]: •
+                      - text: 01:59 PM
+                    - generic [ref=e185]:
+                      - img [ref=e186]
+                      - text: Medical Center, Islamabad
+                    - generic [ref=e189]:
+                      - img [ref=e190]
+                      - text: 0 registered
+                      - generic [ref=e195]: •
+                      - text: 500 capacity
+                  - generic [ref=e198]: 0% full
+                  - generic [ref=e200]:
+                    - generic [ref=e201]:
+                      - paragraph [ref=e202]: Starting from
+                      - paragraph [ref=e203]: ₨4,000
+                    - generic [ref=e204]: View Details
+              - link "Engineering Expo 📅 exhibition Engineering Expo Engineering exhibition Apr 16, 2026 • 01:59 PM Engineering University, Lahore 0 registered • 800 capacity 0% full Starting from ₨1,500 View Details" [ref=e205] [cursor=pointer]:
+                - /url: /events/5
+                - generic [ref=e206]:
+                  - img "Engineering Expo" [ref=e207]
+                  - generic [ref=e208]: 📅 exhibition
+                - generic [ref=e209]:
+                  - heading "Engineering Expo" [level=3] [ref=e210]
+                  - paragraph [ref=e211]: Engineering exhibition
+                  - generic [ref=e212]:
+                    - generic [ref=e213]:
+                      - img [ref=e214]
+                      - text: Apr 16, 2026
+                      - generic [ref=e216]: •
+                      - text: 01:59 PM
+                    - generic [ref=e217]:
+                      - img [ref=e218]
+                      - text: Engineering University, Lahore
+                    - generic [ref=e221]:
+                      - img [ref=e222]
+                      - text: 0 registered
+                      - generic [ref=e227]: •
+                      - text: 800 capacity
+                  - generic [ref=e230]: 0% full
+                  - generic [ref=e232]:
+                    - generic [ref=e233]:
+                      - paragraph [ref=e234]: Starting from
+                      - paragraph [ref=e235]: ₨1,500
+                    - generic [ref=e236]: View Details
+  - region "Notifications (F8)":
+    - list
+  - button "Open Next.js Dev Tools" [ref=e242] [cursor=pointer]:
+    - img [ref=e243]
+  - alert [ref=e246]
+```

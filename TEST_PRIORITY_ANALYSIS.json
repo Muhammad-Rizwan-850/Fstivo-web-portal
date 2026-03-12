@@ -1,0 +1,992 @@
+{
+  "analysis_metadata": {
+    "generated_date": "2026-02-09",
+    "current_coverage": "3.2%",
+    "target_coverage": "50%",
+    "total_src_lib_files": 156,
+    "test_coverage_gap": "46.8%",
+    "src_lib_lines_of_code": 51498,
+    "unit_test_count": 19,
+    "approach": "Focus on largest untested files with high business logic and multiple dependencies"
+  },
+  "critical_findings": {
+    "all_actions_untested": true,
+    "action_files_count": 45,
+    "all_database_queries_untested": true,
+    "database_query_files_count": 15,
+    "largest_untested_file": "src/lib/database/queries/seating.ts",
+    "largest_untested_file_lines": 1011,
+    "key_insight": "Database query files (15 files, ~9500 LOC) and action files (45 files, ~8500 LOC) are completely untested and represent ~34% of src/lib code"
+  },
+  "prioritized_list": [
+    {
+      "rank": 1,
+      "file_path": "src/lib/database/queries/seating.ts",
+      "line_count": 1011,
+      "category": "Database Queries",
+      "exports": [
+        "getVenues()",
+        "getVenue()",
+        "createVenue()",
+        "updateVenue()",
+        "getSeatingLayouts()",
+        "createSeatingLayout()",
+        "getSeatReservations()",
+        "reserveSeat()",
+        "releaseSeat()",
+        "getAccessibilityRequests()",
+        "createAccessibilityRequest()",
+        "getGroupSeating()",
+        "getSeatPricingTiers()"
+      ],
+      "what_it_does": "Complete venue and seating management: venues CRUD, seating layouts, seat reservations, pricing tiers, accessibility requests, group seating, holds",
+      "business_logic_complexity": "HIGH",
+      "dependencies": {
+        "count": 1,
+        "files": ["@/lib/auth/config"]
+      },
+      "estimated_coverage_impact": "HIGH",
+      "impact_percentage": 2.0,
+      "reason_for_priority": "Largest untested file (1011 LOC), complex seating business logic, critical for event management",
+      "test_scenarios": [
+        "GET venue list with filters (active/inactive, by user)",
+        "CREATE venue with validation (name, capacity, address)",
+        "GET seating layout with proper structure",
+        "RESERVE seat with availability check",
+        "RELEASE seat with proper refund/hold cleanup",
+        "Handle seat conflicts (race conditions)",
+        "APPLY accessibility requests (wheelchair spots, companion seats)",
+        "CREATE price tiers for different sections",
+        "GROUP seating calculations",
+        "Error handling: venue not found, invalid seat, already reserved"
+      ],
+      "quick_implementation_difficulty": "MEDIUM",
+      "estimated_test_count": 40
+    },
+    {
+      "rank": 2,
+      "file_path": "src/lib/database/queries/affiliate.ts",
+      "line_count": 902,
+      "category": "Database Queries",
+      "exports": [
+        "getAffiliateProgramConfig()",
+        "getAffiliateAccount()",
+        "createAffiliateAccount()",
+        "updateAffiliateAccount()",
+        "approveAffiliateAccount()",
+        "suspendAffiliateAccount()",
+        "getAffiliateStats()",
+        "recordAffiliateClick()",
+        "recordAffiliateConversion()",
+        "getAffiliateCommissions()",
+        "createAffiliateCommission()",
+        "approveAffiliateCommission()",
+        "getAffiliatePayouts()",
+        "createAffiliatePayout()",
+        "updatePayoutStatus()",
+        "getPayoutsReadyForProcessing()"
+      ],
+      "what_it_does": "Complete affiliate program management: account creation/approval, referral tracking, commission calculations, payout management, stats",
+      "business_logic_complexity": "HIGH",
+      "dependencies": {
+        "count": 1,
+        "files": ["@/lib/auth/config"]
+      },
+      "estimated_coverage_impact": "HIGH",
+      "impact_percentage": 1.8,
+      "reason_for_priority": "Second largest untested file (902 LOC), complex monetization logic, critical revenue feature",
+      "test_scenarios": [
+        "CREATE affiliate account with pending approval",
+        "APPROVE affiliate account with status transition",
+        "SUSPEND affiliate with validation",
+        "GET affiliate program configuration",
+        "CREATE referral link with tracking",
+        "RECORD click event with cookie tracking",
+        "RECORD conversion with amount calculation",
+        "CALCULATE commissions with percentage rules",
+        "CREATE payout request with balance check",
+        "GET payouts ready for processing with status filtering",
+        "Handle duplicate conversions (idempotency)",
+        "Error handling: account not found, approval already pending, insufficient balance"
+      ],
+      "quick_implementation_difficulty": "MEDIUM",
+      "estimated_test_count": 35
+    },
+    {
+      "rank": 3,
+      "file_path": "src/lib/actions/events-server.ts",
+      "line_count": 884,
+      "category": "Server Actions",
+      "exports": [
+        "searchEvents()",
+        "getEventDetail()",
+        "getEventsByOrganizer()",
+        "createEvent()",
+        "updateEvent()",
+        "publishEvent()",
+        "unpublishEvent()",
+        "deleteEvent()",
+        "getEventStats()",
+        "bulkPublishEvents()",
+        "getUpcomingEvents()",
+        "getEventsByCategory()",
+        "archiveEvent()"
+      ],
+      "what_it_does": "Server-side event operations: search, filtering, CRUD operations, publishing, archiving, stats collection, bulk operations",
+      "business_logic_complexity": "HIGH",
+      "dependencies": {
+        "count": 5,
+        "files": ["@/lib/auth/config", "next/cache", "zod", "database types", "@/lib/logger"]
+      },
+      "estimated_coverage_impact": "HIGH",
+      "impact_percentage": 1.7,
+      "reason_for_priority": "Largest action file (884 LOC), core event management, many different operations",
+      "test_scenarios": [
+        "SEARCH events with pagination, filters, sorting",
+        "CREATE event with validation (title, dates, capacity)",
+        "UPDATE event fields (title, description, dates)",
+        "PUBLISH event with approval workflow",
+        "UNPUBLISH event with rollback",
+        "DELETE event with cascade cleanup",
+        "GET event stats (registrations, revenue)",
+        "BULK publish with partial success",
+        "ARCHIVE event (soft delete)",
+        "Filter by category, organizer, date range",
+        "Handle date conflicts (end before start)",
+        "Handle duplicate event creation",
+        "Error handling: event not found, invalid state transitions"
+      ],
+      "quick_implementation_difficulty": "MEDIUM",
+      "estimated_test_count": 30
+    },
+    {
+      "rank": 4,
+      "file_path": "src/lib/database/queries/sponsored-ads.ts",
+      "line_count": 852,
+      "category": "Database Queries",
+      "exports": [
+        "getAdCampaigns()",
+        "getAdCampaign()",
+        "createAdCampaign()",
+        "updateAdCampaign()",
+        "pauseAdCampaign()",
+        "resumeAdCampaign()",
+        "getAdInventory()",
+        "reserveAdInventory()",
+        "releaseAdInventory()",
+        "recordAdImpression()",
+        "recordAdClick()",
+        "getAdMetrics()",
+        "getAdPayments()",
+        "createAdPayment()",
+        "updatePaymentStatus()"
+      ],
+      "what_it_does": "Sponsored ads management: campaign CRUD, inventory reservation, impression/click tracking, metrics calculation, payment handling",
+      "business_logic_complexity": "HIGH",
+      "dependencies": {
+        "count": 1,
+        "files": ["@/lib/auth/config"]
+      },
+      "estimated_coverage_impact": "HIGH",
+      "impact_percentage": 1.7,
+      "reason_for_priority": "Third largest untested query file (852 LOC), revenue-critical ad system",
+      "test_scenarios": [
+        "CREATE ad campaign with budget limits",
+        "UPDATE campaign budget with validation",
+        "PAUSE/RESUME campaign with state transitions",
+        "GET inventory availability by position/time",
+        "RESERVE inventory with conflict checking",
+        "RELEASE inventory with proper cleanup",
+        "RECORD impression with timestamp",
+        "RECORD click with attribution",
+        "CALCULATE metrics (CTR, CPM, ROI)",
+        "GET ad payments with filtering",
+        "CREATE payment with amount calculation",
+        "Handle overbooking scenarios",
+        "Error handling: budget exceeded, inventory unavailable, campaign inactive"
+      ],
+      "quick_implementation_difficulty": "MEDIUM",
+      "estimated_test_count": 32
+    },
+    {
+      "rank": 5,
+      "file_path": "src/lib/database/queries/email-marketing.ts",
+      "line_count": 816,
+      "category": "Database Queries",
+      "exports": [
+        "getEmailLists()",
+        "createEmailList()",
+        "updateEmailList()",
+        "getListSubscribers()",
+        "addSubscriber()",
+        "removeSubscriber()",
+        "getEmailCampaigns()",
+        "createEmailCampaign()",
+        "updateEmailCampaign()",
+        "scheduleCampaign()",
+        "sendCampaign()",
+        "getCampaignMetrics()",
+        "getEmailTemplates()",
+        "createEmailTemplate()"
+      ],
+      "what_it_does": "Email marketing: list management, subscriber operations, campaign creation/scheduling/sending, template management, metrics",
+      "business_logic_complexity": "MEDIUM-HIGH",
+      "dependencies": {
+        "count": 1,
+        "files": ["@/lib/auth/config"]
+      },
+      "estimated_coverage_impact": "HIGH",
+      "impact_percentage": 1.6,
+      "reason_for_priority": "Fourth largest query file (816 LOC), marketing-critical feature, complex state management",
+      "test_scenarios": [
+        "CREATE email list with validation",
+        "ADD subscriber with duplicate checking",
+        "REMOVE subscriber with cleanup",
+        "GET subscribers with pagination and filtering",
+        "CREATE email campaign with template",
+        "SCHEDULE campaign with date validation",
+        "SEND campaign with error retry logic",
+        "GET campaign metrics (open rate, click rate)",
+        "UPDATE campaign settings before sending",
+        "Handle invalid email addresses",
+        "Error handling: list not found, campaign already sent, template not found"
+      ],
+      "quick_implementation_difficulty": "MEDIUM",
+      "estimated_test_count": 28
+    },
+    {
+      "rank": 6,
+      "file_path": "src/lib/actions/revenue-actions.ts",
+      "line_count": 792,
+      "category": "Server Actions",
+      "exports": [
+        "getRevenueReport()",
+        "calculateEventRevenue()",
+        "getMonthlyRevenue()",
+        "getRevenueByChannel()",
+        "getRevenueByEventType()",
+        "getForecastedRevenue()",
+        "exportRevenueReport()",
+        "getPayoutSchedule()",
+        "scheduleOrganiserPayout()",
+        "calculateFeeSplit()",
+        "getAffiliateRevenue()",
+        "getAdRevenue()"
+      ],
+      "what_it_does": "Revenue reporting and analytics: revenue calculations by event/time/channel, forecasting, fee calculations, payout scheduling, export",
+      "business_logic_complexity": "MEDIUM-HIGH",
+      "dependencies": {
+        "count": 5,
+        "files": ["@/lib/auth/config", "database types", "database queries", "@/lib/logger", "analytics"]
+      },
+      "estimated_coverage_impact": "HIGH",
+      "impact_percentage": 1.6,
+      "reason_for_priority": "Large action file (792 LOC), complex financial calculations, critical for business reporting",
+      "test_scenarios": [
+        "CALCULATE event revenue (tickets × price - fees)",
+        "GET revenue by date range",
+        "GET revenue by channel (direct, affiliate, ads)",
+        "GET revenue by event type with filtering",
+        "FORECAST revenue based on historical data",
+        "CALCULATE fee split (platform vs organizer)",
+        "GET affiliate revenue with commission amounts",
+        "GET ad revenue with CPM calculations",
+        "EXPORT revenue report in CSV format",
+        "GET payout schedule with pending/paid status",
+        "SCHEDULE organizer payout with validation",
+        "Handle rounding errors in financial calculations",
+        "Error handling: insufficient data, invalid date range"
+      ],
+      "quick_implementation_difficulty": "MEDIUM",
+      "estimated_test_count": 25
+    },
+    {
+      "rank": 7,
+      "file_path": "src/lib/actions/events.ts",
+      "line_count": 769,
+      "category": "Server Actions",
+      "exports": [
+        "getEventsByFilter()",
+        "getEventDetail()",
+        "createEventDraft()",
+        "updateEventDraft()",
+        "publishEventDraft()",
+        "getMyEvents()",
+        "searchPublicEvents()",
+        "getEventsByOrganizer()",
+        "getFeaturedEvents()",
+        "getTrendingEvents()",
+        "getEventsByLocation()",
+        "getEventsByCategory()"
+      ],
+      "what_it_does": "Event discovery and management: search/filter, drafts, publishing, organizer events, featured/trending, location-based, category-based",
+      "business_logic_complexity": "MEDIUM-HIGH",
+      "dependencies": {
+        "count": 5,
+        "files": ["@/lib/auth/config", "database queries", "cache", "analytics", "@/lib/logger"]
+      },
+      "estimated_coverage_impact": "HIGH",
+      "impact_percentage": 1.5,
+      "reason_for_priority": "Large action file (769 LOC), core user-facing feature, complex filtering logic",
+      "test_scenarios": [
+        "SEARCH events with full-text search",
+        "FILTER by date, location, category, price range",
+        "CREATE event draft with auto-save",
+        "UPDATE draft fields incrementally",
+        "PUBLISH draft with validation",
+        "GET user's events (organized + registered)",
+        "GET featured events (admin selected)",
+        "GET trending events (based on engagement)",
+        "SEARCH nearby events by location",
+        "FILTER by category with multi-select",
+        "PAGINATION with cursor and limit",
+        "Error handling: invalid filters, unpublished events unauthorized access"
+      ],
+      "quick_implementation_difficulty": "MEDIUM",
+      "estimated_test_count": 28
+    },
+    {
+      "rank": 8,
+      "file_path": "src/lib/database/queries/ticketing.ts",
+      "line_count": 723,
+      "category": "Database Queries",
+      "exports": [
+        "getTicketTypes()",
+        "createTicketType()",
+        "updateTicketType()",
+        "getTickets()",
+        "getTicket()",
+        "createTicket()",
+        "updateTicketStatus()",
+        "getTicketsByEvent()",
+        "getTicketsByUser()",
+        "getTicketSalesReport()",
+        "cancelTicket()",
+        "refundTicket()",
+        "resendTicket()",
+        "validateTicketCode()",
+        "markTicketAsUsed()"
+      ],
+      "what_it_does": "Ticket management: ticket types, ticket CRUD, status tracking, sales reporting, cancellation/refunds, validation, usage tracking",
+      "business_logic_complexity": "MEDIUM-HIGH",
+      "dependencies": {
+        "count": 1,
+        "files": ["@/lib/auth/config"]
+      },
+      "estimated_coverage_impact": "HIGH",
+      "impact_percentage": 1.4,
+      "reason_for_priority": "Large query file (723 LOC), core revenue feature, complex state transitions",
+      "test_scenarios": [
+        "CREATE ticket type with price and availability",
+        "GET tickets with status filtering",
+        "CREATE ticket with unique code generation",
+        "UPDATE ticket status (pending → paid → used)",
+        "CANCEL ticket with refund eligibility check",
+        "REFUND ticket with payment reversal",
+        "VALIDATE ticket code (QR/barcode scan)",
+        "MARK ticket as used (check-in)",
+        "GET sales report by ticket type",
+        "RESEND ticket to user",
+        "Handle duplicate purchases",
+        "Handle refunds after event start",
+        "Error handling: ticket not found, invalid status transition, already used"
+      ],
+      "quick_implementation_difficulty": "MEDIUM",
+      "estimated_test_count": 30
+    },
+    {
+      "rank": 9,
+      "file_path": "src/lib/database/queries/templates.ts",
+      "line_count": 698,
+      "category": "Database Queries",
+      "exports": [
+        "getEmailTemplates()",
+        "getEmailTemplate()",
+        "createEmailTemplate()",
+        "updateEmailTemplate()",
+        "deleteEmailTemplate()",
+        "getEventTemplates()",
+        "getEventTemplate()",
+        "createEventTemplate()",
+        "updateEventTemplate()",
+        "publishEventTemplate()",
+        "getTemplateCategories()",
+        "searchTemplates()",
+        "getPopularTemplates()"
+      ],
+      "what_it_does": "Template management: email templates, event templates (with versions), publishing, categories, search, popularity tracking",
+      "business_logic_complexity": "MEDIUM",
+      "dependencies": {
+        "count": 1,
+        "files": ["@/lib/auth/config"]
+      },
+      "estimated_coverage_impact": "MEDIUM-HIGH",
+      "impact_percentage": 1.4,
+      "reason_for_priority": "Large query file (698 LOC), reusable content feature, used by multiple modules",
+      "test_scenarios": [
+        "CREATE email template with validation",
+        "UPDATE template with version tracking",
+        "DELETE template with soft delete",
+        "GET template with variables/placeholders",
+        "CREATE event template",
+        "PUBLISH template (transition to active)",
+        "SEARCH templates by keyword",
+        "GET popular templates (by usage count)",
+        "RENDER template with variable substitution",
+        "Handle template inheritance",
+        "Error handling: template not found, publish invalid template"
+      ],
+      "quick_implementation_difficulty": "MEDIUM",
+      "estimated_test_count": 25
+    },
+    {
+      "rank": 10,
+      "file_path": "src/lib/database/queries/subscriptions.ts",
+      "line_count": 693,
+      "category": "Database Queries",
+      "exports": [
+        "getSubscriptionPlans()",
+        "getSubscriptionPlan()",
+        "createSubscriptionPlan()",
+        "updateSubscriptionPlan()",
+        "getUserSubscription()",
+        "getSubscriptionsByUser()",
+        "createSubscription()",
+        "updateSubscription()",
+        "cancelSubscription()",
+        "pauseSubscription()",
+        "resumeSubscription()",
+        "getSubscriptionPayments()",
+        "recordSubscriptionPayment()",
+        "getChurnRisks()",
+        "getSubscriptionMetrics()"
+      ],
+      "what_it_does": "Subscription management: plan definitions, user subscriptions, lifecycle management (pause/resume/cancel), payment tracking, metrics",
+      "business_logic_complexity": "MEDIUM-HIGH",
+      "dependencies": {
+        "count": 1,
+        "files": ["@/lib/auth/config"]
+      },
+      "estimated_coverage_impact": "MEDIUM-HIGH",
+      "impact_percentage": 1.4,
+      "reason_for_priority": "Large query file (693 LOC), recurring revenue feature, complex state machine",
+      "test_scenarios": [
+        "CREATE subscription plan with pricing",
+        "CREATE subscription for user",
+        "UPDATE subscription (plan change, pause)",
+        "PAUSE subscription with resume capability",
+        "RESUME subscription from paused state",
+        "CANCEL subscription with churn tracking",
+        "RECORD subscription payment",
+        "GET subscription payment history",
+        "IDENTIFY churn risks (usage patterns)",
+        "CALCULATE MRR (Monthly Recurring Revenue)",
+        "Handle billing date calculations",
+        "Error handling: plan not found, invalid state transitions, payment failed"
+      ],
+      "quick_implementation_difficulty": "MEDIUM",
+      "estimated_test_count": 28
+    },
+    {
+      "rank": 11,
+      "file_path": "src/lib/emailService.ts",
+      "line_count": 663,
+      "category": "Core Utilities",
+      "exports": [
+        "emailService.sendEmail()",
+        "emailService.sendWelcomeEmail()",
+        "emailService.sendVerificationEmail()",
+        "emailService.sendPasswordResetEmail()",
+        "emailService.sendEventRegistrationEmail()",
+        "emailService.sendEventReminderEmail()",
+        "emailService.sendRefundEmail()",
+        "emailService.sendPayoutEmail()",
+        "emailService.sendBulkEmail()"
+      ],
+      "what_it_does": "Email service via Resend: transactional emails (welcome, verification, reset, event notifications, refunds), bulk emails, template rendering",
+      "business_logic_complexity": "MEDIUM",
+      "dependencies": {
+        "count": 3,
+        "files": ["resend", "@/lib/auth/config", "@/lib/logger"]
+      },
+      "estimated_coverage_impact": "MEDIUM-HIGH",
+      "impact_percentage": 1.3,
+      "reason_for_priority": "Large utility (663 LOC), external service integration, used by all user workflows",
+      "test_scenarios": [
+        "SEND welcome email with template rendering",
+        "SEND verification email with token",
+        "SEND password reset email with link",
+        "SEND event registration confirmation",
+        "SEND event reminder (24h before)",
+        "SEND refund notification with amount",
+        "SEND affiliate payout email with details",
+        "SEND bulk emails with error handling",
+        "Handle invalid email addresses",
+        "MOCK resend API when key missing",
+        "Error handling: resend API failure, invalid template, email bounced"
+      ],
+      "quick_implementation_difficulty": "MEDIUM",
+      "estimated_test_count": 26
+    },
+    {
+      "rank": 12,
+      "file_path": "src/lib/utils/uploadUtils.ts",
+      "line_count": 651,
+      "category": "Utilities",
+      "exports": [
+        "validateFileSize()",
+        "validateFileType()",
+        "validateImage()",
+        "compressImage()",
+        "generateFileKey()",
+        "uploadToS3()",
+        "uploadImageToS3()",
+        "deleteFromS3()",
+        "getS3Url()",
+        "batchUploadToS3()",
+        "getUploadProgress()"
+      ],
+      "what_it_does": "File upload utilities: validation (size/type), image compression, S3 operations (upload/delete/URL generation), batch operations",
+      "business_logic_complexity": "MEDIUM",
+      "dependencies": {
+        "count": 4,
+        "files": ["aws-sdk", "sharp (image processing)", "@/lib/logger", "env variables"]
+      },
+      "estimated_coverage_impact": "MEDIUM-HIGH",
+      "impact_percentage": 1.3,
+      "reason_for_priority": "Large utility (651 LOC), already has tests (191 LOC), but incomplete coverage",
+      "test_scenarios": [
+        "VALIDATE file size limits (5MB images, 50MB videos)",
+        "VALIDATE file types (allowed MIME types)",
+        "VALIDATE image dimensions and aspect ratios",
+        "COMPRESS image with quality levels",
+        "GENERATE unique file keys with timestamps",
+        "UPLOAD to S3 with progress tracking",
+        "DELETE from S3 with cascade cleanup",
+        "GET signed S3 URL for file access",
+        "BATCH upload multiple files",
+        "Handle upload failures and retries",
+        "Error handling: file too large, unsupported type, S3 unavailable"
+      ],
+      "quick_implementation_difficulty": "MEDIUM",
+      "estimated_test_count": 24
+    },
+    {
+      "rank": 13,
+      "file_path": "src/lib/actions/email-server.ts",
+      "line_count": 681,
+      "category": "Server Actions",
+      "exports": [
+        "sendEmailCampaign()",
+        "createEmailTemplate()",
+        "scheduleEmailCampaign()",
+        "getEmailCampaignMetrics()",
+        "resendFailedEmails()",
+        "updateEmailTemplate()",
+        "testEmailTemplate()",
+        "getSendingSchedule()",
+        "validateEmailList()",
+        "importEmailList()"
+      ],
+      "what_it_does": "Server-side email operations: campaign creation/sending/scheduling, metrics, template management, list validation/import, testing",
+      "business_logic_complexity": "MEDIUM-HIGH",
+      "dependencies": {
+        "count": 6,
+        "files": ["@/lib/emailService", "@/lib/database/queries", "@/lib/auth/config", "@/lib/logger", "zod", "next/cache"]
+      },
+      "estimated_coverage_impact": "MEDIUM-HIGH",
+      "impact_percentage": 1.3,
+      "reason_for_priority": "Large action file (681 LOC), marketing-critical, multiple integrations",
+      "test_scenarios": [
+        "SEND email campaign with recipient list",
+        "SCHEDULE campaign for future time",
+        "CREATE email template with variables",
+        "UPDATE template with validation",
+        "TEST template by sending to admin",
+        "GET campaign metrics (sent, opened, clicked)",
+        "RESEND failed emails with backoff",
+        "VALIDATE email list (format, deliverability)",
+        "IMPORT email list from CSV",
+        "Handle unsubscribe requests",
+        "Error handling: invalid recipient list, delivery failure, template not found"
+      ],
+      "quick_implementation_difficulty": "MEDIUM",
+      "estimated_test_count": 24
+    },
+    {
+      "rank": 14,
+      "file_path": "src/lib/database/queries/analytics.ts",
+      "line_count": 615,
+      "category": "Database Queries",
+      "exports": [
+        "getEventAnalytics()",
+        "getUserAnalytics()",
+        "getTopEvents()",
+        "getEventConversionFunnel()",
+        "recordPageView()",
+        "recordUserAction()",
+        "getEventRevenueTrend()",
+        "getUserRetention()",
+        "getDeviceMetrics()",
+        "getGeoMetrics()",
+        "getSourceMetrics()"
+      ],
+      "what_it_does": "Analytics data: event metrics, user behavior, funnels, revenue trends, retention, device/geo/source tracking",
+      "business_logic_complexity": "MEDIUM",
+      "dependencies": {
+        "count": 1,
+        "files": ["@/lib/auth/config"]
+      },
+      "estimated_coverage_impact": "MEDIUM",
+      "impact_percentage": 1.2,
+      "reason_for_priority": "Large query file (615 LOC), business intelligence critical, multiple aggregation queries",
+      "test_scenarios": [
+        "RECORD page view event",
+        "RECORD user action with properties",
+        "GET event analytics (visitors, conversions)",
+        "GET user analytics (DAU, retention)",
+        "GET conversion funnel steps",
+        "GET top events by revenue/traffic",
+        "GET revenue trend over time",
+        "GET user retention by cohort",
+        "GET metrics by device type",
+        "GET metrics by geography",
+        "GET metrics by traffic source",
+        "Handle missing or sparse data"
+      ],
+      "quick_implementation_difficulty": "MEDIUM",
+      "estimated_test_count": 22
+    },
+    {
+      "rank": 15,
+      "file_path": "src/lib/security/gdpr-compliance.ts",
+      "line_count": 570,
+      "category": "Security/Compliance",
+      "exports": [
+        "getUserData()",
+        "exportUserData()",
+        "deleteUserData()",
+        "anonymizeUser()",
+        "requestDataDeletion()",
+        "getConsentStatus()",
+        "recordConsent()",
+        "withdrawConsent()",
+        "getDataProcessingLog()",
+        "validateDataResidency()"
+      ],
+      "what_it_does": "GDPR compliance: data export/deletion/anonymization, consent management, audit logging, data residency validation",
+      "business_logic_complexity": "MEDIUM-HIGH",
+      "dependencies": {
+        "count": 3,
+        "files": ["@/lib/auth/config", "@/lib/logger", "database"]
+      },
+      "estimated_coverage_impact": "MEDIUM-HIGH",
+      "impact_percentage": 1.2,
+      "reason_for_priority": "Large security file (570 LOC), regulatory requirement, complex data cascade operations",
+      "test_scenarios": [
+        "REQUEST user data export",
+        "EXPORT all user data (PII, transactions, activity)",
+        "REQUEST user deletion (GDPR right to be forgotten)",
+        "DELETE user with cascade (orders, preferences, etc)",
+        "ANONYMIZE user data (PII removal, not deletion)",
+        "RECORD consent (marketing, analytics, tracking)",
+        "WITHDRAW consent (stop data collection)",
+        "VALIDATE data residency (EU/non-EU)",
+        "GET data processing audit log",
+        "Handle deletion conflicts (active orders, pending refunds)",
+        "Error handling: user not found, deletion in progress, invalid consent state"
+      ],
+      "quick_implementation_difficulty": "MEDIUM-HIGH",
+      "estimated_test_count": 28
+    },
+    {
+      "rank": 16,
+      "file_path": "src/lib/database/queries/checkin.ts",
+      "line_count": 571,
+      "category": "Database Queries",
+      "exports": [
+        "getCheckinSettings()",
+        "createCheckin()",
+        "updateCheckinStatus()",
+        "recordBulkCheckin()",
+        "getEventCheckins()",
+        "getCheckinReport()",
+        "validateQRCode()",
+        "getAttendanceRate()",
+        "getCheckinTimeline()",
+        "getNoShowAnalytics()"
+      ],
+      "what_it_does": "Event check-in management: QR code validation, bulk check-in, status tracking, attendance reporting, no-show analysis",
+      "business_logic_complexity": "MEDIUM",
+      "dependencies": {
+        "count": 1,
+        "files": ["@/lib/auth/config"]
+      },
+      "estimated_coverage_impact": "MEDIUM",
+      "impact_percentage": 1.1,
+      "reason_for_priority": "Large query file (571 LOC), on-site operations critical, QR code handling",
+      "test_scenarios": [
+        "CREATE check-in record with timestamp",
+        "VALIDATE QR code (decrypt, verify signature)",
+        "UPDATE check-in status (pending → confirmed)",
+        "RECORD bulk check-in (multiple at once)",
+        "GET event check-ins with filtering",
+        "GET check-in report (count, rate, timeline)",
+        "GET attendance rate (checked vs registered)",
+        "GET no-show analytics",
+        "Handle duplicate check-ins (same person twice)",
+        "Handle invalid QR codes",
+        "Error handling: event not found, ticket not valid, already checked in"
+      ],
+      "quick_implementation_difficulty": "MEDIUM",
+      "estimated_test_count": 24
+    },
+    {
+      "rank": 17,
+      "file_path": "src/lib/security/two-factor-auth.ts",
+      "line_count": 523,
+      "category": "Security/Auth",
+      "exports": [
+        "generateTOTPSecret()",
+        "verifyTOTPCode()",
+        "generateBackupCodes()",
+        "verifyBackupCode()",
+        "enableTwoFactor()",
+        "disableTwoFactor()",
+        "getTwoFactorStatus()",
+        "sendSMSCode()",
+        "verifySMSCode()",
+        "sendEmailCode()"
+      ],
+      "what_it_does": "Two-factor authentication: TOTP (Google Authenticator), SMS codes, backup codes, email codes, management",
+      "business_logic_complexity": "MEDIUM-HIGH",
+      "dependencies": {
+        "count": 4,
+        "files": ["speakeasy (TOTP)", "@/lib/auth/config", "@/lib/logger", "SMS provider"]
+      },
+      "estimated_coverage_impact": "MEDIUM",
+      "impact_percentage": 1.0,
+      "reason_for_priority": "Large security file (523 LOC), critical auth feature, crypto operations",
+      "test_scenarios": [
+        "GENERATE TOTP secret (base32 encoding)",
+        "VERIFY TOTP code (time window tolerance)",
+        "GENERATE backup codes (10 codes)",
+        "VERIFY backup code (one-time use)",
+        "ENABLE 2FA (transition state)",
+        "DISABLE 2FA (verify current password)",
+        "SEND SMS code with rate limiting",
+        "VERIFY SMS code (match + timeout)",
+        "SEND email code with token",
+        "VERIFY email code with expiration",
+        "Handle code expiration",
+        "Error handling: invalid code, code expired, max attempts exceeded"
+      ],
+      "quick_implementation_difficulty": "MEDIUM",
+      "estimated_test_count": 26
+    },
+    {
+      "rank": 18,
+      "file_path": "src/lib/actions/revenue-actions.ts",
+      "line_count": 521,
+      "category": "Monetization",
+      "exports": [
+        "calculateAffiliateCommission()",
+        "recordAffiliateClick()",
+        "recordAffiliateConversion()",
+        "getAffiliateStats()",
+        "getCommissionBreakdown()",
+        "scheduleAffiliatePayout()",
+        "validateAffiliateLink()"
+      ],
+      "what_it_does": "Affiliate tracking and commission: commission calculations, click/conversion recording, stats, payout scheduling, link validation",
+      "business_logic_complexity": "MEDIUM",
+      "dependencies": {
+        "count": 5,
+        "files": ["@/lib/database/queries/affiliate", "@/lib/auth/config", "@/lib/logger", "analytics", "payment provider"]
+      },
+      "estimated_coverage_impact": "MEDIUM",
+      "impact_percentage": 1.0,
+      "reason_for_priority": "Revenue-critical file (521 LOC), complex commission logic, multiple dependencies",
+      "test_scenarios": [
+        "CALCULATE commission (percentage of sale)",
+        "RECORD affiliate click with tracking cookie",
+        "RECORD conversion with attribution",
+        "GET affiliate stats (clicks, conversions, earnings)",
+        "GET commission breakdown (by product/category)",
+        "SCHEDULE payout with balance check",
+        "VALIDATE affiliate link format",
+        "Handle multi-tier commissions",
+        "Handle refunds (reverse commissions)",
+        "Error handling: invalid affiliate, expired link, payment processing failed"
+      ],
+      "quick_implementation_difficulty": "MEDIUM",
+      "estimated_test_count": 24
+    },
+    {
+      "rank": 19,
+      "file_path": "src/lib/cache/redis-config.ts",
+      "line_count": 541,
+      "category": "Infrastructure",
+      "exports": [
+        "initializeRedis()",
+        "getRedisClient()",
+        "cacheGet()",
+        "cacheSet()",
+        "cacheDel()",
+        "cacheExists()",
+        "cacheExpire()",
+        "cacheTTL()",
+        "cacheIncr()",
+        "flushCache()"
+      ],
+      "what_it_does": "Redis cache configuration and operations: initialization, get/set/delete, TTL management, atomic operations, cache clearing",
+      "business_logic_complexity": "MEDIUM",
+      "dependencies": {
+        "count": 3,
+        "files": ["redis", "@/lib/logger", "env variables"]
+      },
+      "estimated_coverage_impact": "MEDIUM",
+      "impact_percentage": 1.1,
+      "reason_for_priority": "Infrastructure utility (541 LOC), used across codebase, performance critical",
+      "test_scenarios": [
+        "INITIALIZE redis connection",
+        "CACHE get with default value",
+        "CACHE set with TTL",
+        "CACHE delete single key",
+        "CACHE delete pattern (wildcard)",
+        "CACHE exists check",
+        "CACHE expire (TTL update)",
+        "CACHE TTL query",
+        "CACHE increment (atomic counter)",
+        "FLUSH cache (all keys)",
+        "Handle redis unavailable",
+        "Handle serialization errors"
+      ],
+      "quick_implementation_difficulty": "MEDIUM",
+      "estimated_test_count": 22
+    },
+    {
+      "rank": 20,
+      "file_path": "src/lib/analytics/service.ts",
+      "line_count": 541,
+      "category": "Analytics",
+      "exports": [
+        "trackEvent()",
+        "trackPageView()",
+        "trackConversion()",
+        "trackError()",
+        "identifyUser()",
+        "setUserProperties()",
+        "getAnalytics()",
+        "batchTrackEvents()",
+        "flushAnalytics()"
+      ],
+      "what_it_does": "Analytics service: event tracking, page views, conversions, errors, user identification, properties, batch operations",
+      "business_logic_complexity": "MEDIUM",
+      "dependencies": {
+        "count": 4,
+        "files": ["analytics provider API", "@/lib/logger", "cache", "env variables"]
+      },
+      "estimated_coverage_impact": "MEDIUM",
+      "impact_percentage": 1.1,
+      "reason_for_priority": "Analytics critical (541 LOC), used for business intelligence, multiple integrations",
+      "test_scenarios": [
+        "TRACK event with properties",
+        "TRACK page view with referrer",
+        "TRACK conversion with amount",
+        "TRACK error with stack trace",
+        "IDENTIFY user with properties",
+        "SET user properties (name, email, etc)",
+        "BATCH track multiple events",
+        "FLUSH analytics queue",
+        "Handle offline mode",
+        "Error handling: analytics provider unavailable, invalid event"
+      ],
+      "quick_implementation_difficulty": "MEDIUM",
+      "estimated_test_count": 20
+    }
+  ],
+  "summary_statistics": {
+    "total_prioritized_files": 20,
+    "total_estimated_lines_of_code": 14185,
+    "total_estimated_test_count": 515,
+    "estimated_coverage_increase": "22-28%",
+    "critical_categories": {
+      "database_queries": {
+        "file_count": 10,
+        "lines_of_code": 7451,
+        "estimated_tests": 260,
+        "reason": "All 15 query files untested, each has many exported functions"
+      },
+      "server_actions": {
+        "file_count": 6,
+        "lines_of_code": 4416,
+        "estimated_tests": 160,
+        "reason": "All 45 action files untested, most are critical workflows"
+      },
+      "core_utilities": {
+        "file_count": 2,
+        "lines_of_code": 1314,
+        "estimated_tests": 50,
+        "reason": "EmailService, UploadUtils; used across platform"
+      },
+      "security": {
+        "file_count": 2,
+        "lines_of_code": 1093,
+        "estimated_tests": 54,
+        "reason": "GDPR and 2FA critical for compliance and security"
+      }
+    },
+    "estimated_effort": {
+      "quick_tests": {
+        "files": 12,
+        "estimated_hours": 20,
+        "reason": "CRUD operations, simple validations, straightforward mocks"
+      },
+      "medium_tests": {
+        "files": 7,
+        "estimated_hours": 25,
+        "reason": "Complex business logic, multiple state transitions, integrations"
+      },
+      "complex_tests": {
+        "files": 1,
+        "estimated_hours": 8,
+        "reason": "Security operations, concurrency, race conditions"
+      },
+      "total_estimated_hours": 53
+    }
+  },
+  "implementation_strategy": {
+    "phase_1_quick_wins": [
+      "src/lib/database/queries/seating.ts (1011 LOC, HIGH impact)",
+      "src/lib/database/queries/affiliate.ts (902 LOC, HIGH impact)",
+      "src/lib/actions/events-server.ts (884 LOC, HIGH impact)",
+      "src/lib/database/queries/sponsored-ads.ts (852 LOC, HIGH impact)"
+    ],
+    "phase_1_duration": "1-2 weeks",
+    "phase_1_expected_coverage_gain": "8-12%",
+    "phase_2_core_features": [
+      "src/lib/database/queries/email-marketing.ts",
+      "src/lib/actions/revenue-actions.ts",
+      "src/lib/actions/events.ts",
+      "src/lib/database/queries/ticketing.ts"
+    ],
+    "phase_2_duration": "2-3 weeks",
+    "phase_2_expected_coverage_gain": "8-10%",
+    "phase_3_remaining_critical": [
+      "src/lib/database/queries/templates.ts",
+      "src/lib/database/queries/subscriptions.ts",
+      "src/lib/emailService.ts",
+      "src/lib/utils/uploadUtils.ts"
+    ],
+    "phase_3_duration": "2-3 weeks",
+    "phase_3_expected_coverage_gain": "6-8%",
+    "recommendations": {
+      "use_mocks": "Mock Supabase client, external APIs (Resend, S3, Redis)",
+      "use_fixtures": "Create sample event, user, and subscription data",
+      "test_patterns": "AAA (Arrange-Act-Assert), parametrized tests for multiple scenarios",
+      "error_scenarios": "Always test error paths, edge cases, and boundary conditions",
+      "integration_tests": "Run E2E tests for critical workflows (registration → payment → check-in)"
+    }
+  }
+}

@@ -1,0 +1,98 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e5]:
+        - link "Fstivo" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - img "Fstivo" [ref=e8]
+        - generic [ref=e10]:
+          - link "Events" [ref=e11] [cursor=pointer]:
+            - /url: /events
+            - img [ref=e12]
+            - text: Events
+          - link "Jobs" [ref=e14] [cursor=pointer]:
+            - /url: /jobs
+            - img [ref=e15]
+            - text: Jobs
+          - link "Verify Certificate" [ref=e18] [cursor=pointer]:
+            - /url: /verify
+            - img [ref=e19]
+            - text: Verify Certificate
+          - link "Features" [ref=e21] [cursor=pointer]:
+            - /url: /features
+            - img [ref=e22]
+            - text: Features
+          - link "Pricing" [ref=e24] [cursor=pointer]:
+            - /url: /pricing
+            - img [ref=e25]
+            - text: Pricing
+          - link "About" [ref=e27] [cursor=pointer]:
+            - /url: /about
+            - img [ref=e28]
+            - text: About
+        - generic [ref=e33]:
+          - link "Sign In" [ref=e34] [cursor=pointer]:
+            - /url: /sign-in
+          - link "Get Started" [ref=e35] [cursor=pointer]:
+            - /url: /sign-up
+    - main [ref=e36]:
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - generic [ref=e41]: F
+          - heading "Festivo" [level=1] [ref=e42]
+          - paragraph [ref=e43]: Create an account to get started
+        - generic [ref=e44]:
+          - generic [ref=e45]:
+            - button "Login" [ref=e46] [cursor=pointer]
+            - button "Sign Up" [ref=e47] [cursor=pointer]
+          - generic [ref=e48]:
+            - generic [ref=e49]:
+              - generic [ref=e50]: Full Name
+              - generic [ref=e51]:
+                - img [ref=e52]
+                - textbox "John Doe" [ref=e55]
+            - generic [ref=e56]:
+              - generic [ref=e57]: Email Address
+              - generic [ref=e58]:
+                - img [ref=e59]
+                - textbox "you@example.com" [ref=e62]
+            - generic [ref=e63]:
+              - generic [ref=e64]: Password
+              - generic [ref=e65]:
+                - img [ref=e66]
+                - textbox "••••••••" [ref=e69]
+                - button [ref=e70] [cursor=pointer]:
+                  - img [ref=e71]
+              - paragraph [ref=e74]: Must be at least 8 characters
+            - generic [ref=e75]:
+              - generic [ref=e76]: Confirm Password
+              - generic [ref=e77]:
+                - img [ref=e78]
+                - textbox "••••••••" [ref=e81]
+            - generic [ref=e82]:
+              - checkbox "I agree to the Terms of Service and Privacy Policy" [ref=e83]
+              - generic [ref=e84]:
+                - text: I agree to the
+                - link "Terms of Service" [ref=e85] [cursor=pointer]:
+                  - /url: "#"
+                - text: and
+                - link "Privacy Policy" [ref=e86] [cursor=pointer]:
+                  - /url: "#"
+            - button "Create Account" [ref=e87] [cursor=pointer]
+          - generic [ref=e92]: Or continue with
+          - generic [ref=e93]:
+            - button "Google" [ref=e94] [cursor=pointer]:
+              - img [ref=e95]
+              - text: Google
+            - button "Facebook" [ref=e100] [cursor=pointer]:
+              - img [ref=e101]
+              - text: Facebook
+        - paragraph [ref=e103]:
+          - text: Already have an account?
+          - button "Login" [ref=e104] [cursor=pointer]
+  - region "Notifications (F8)":
+    - list
+```
