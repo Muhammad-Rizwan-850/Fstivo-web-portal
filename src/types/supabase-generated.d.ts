@@ -1,6 +1,4 @@
-// Placeholder Supabase types file
-// The real generated types can be produced with:
-//   npm run gen:supabase-types
-// Temporarily export an empty module to keep TypeScript happy.
-
-export {};
+// Placeholder Supabase types - regenerate with: npm run gen:supabase-types
+export interface Database {
+  // Add your database types here
+} 

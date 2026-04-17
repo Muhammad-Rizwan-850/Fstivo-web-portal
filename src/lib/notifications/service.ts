@@ -2,9 +2,9 @@
  * Updated notification service with multi-channel support
  */
 
-import { sendSMS, sendBulkSMS } from './sms';
-import { sendWhatsApp, sendWhatsAppTemplate } from './whatsapp';
-import { sendPushToUser, sendBulkPush, type PushNotificationPayload } from './push';
+import { sendSMS } from './sms';
+import { sendWhatsApp } from './whatsapp';
+import { sendPushToUser, type PushNotificationPayload } from './push';
 
 // Export notification types
 export type NotificationChannel = 'email' | 'sms' | 'push' | 'whatsapp';
@@ -16,8 +16,14 @@ export interface NotificationOptions {
   scheduledFor?: Date;
 }
 
+export interface NotificationPayload {
+  subject?: string;
+  message: string;
+  data?: Record<string, unknown>;
+}
+
 export class NotificationService {
-  async sendEmail(userId: string, notification: any) {
+  async sendEmail(userId: string, notification: NotificationPayload) {
     const { createClient } = await import('@/lib/supabase/server');
     const supabase = createClient();
 

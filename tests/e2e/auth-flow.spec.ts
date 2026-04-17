@@ -35,7 +35,10 @@ test.describe('Authentication Flow', () => {
         await roleSelect.selectOption('attendee');
       }
       
-      const submitButton = page.locator('button[type="submit"]').first();
+      const submitButton = page.locator('button:has-text("Create Account"), button[type="submit"]').first();
+      await submitButton.waitFor({ state: 'visible', timeout: 10000 }).catch(() => {
+        console.warn('submit button not visible on registration form');
+      });
       await submitButton.click();
       
       await Promise.race([
@@ -66,7 +69,10 @@ test.describe('Authentication Flow', () => {
       await emailInput.fill('test@example.com');
       const passwordInput = page.locator('input[name="password"], input[type="password"]').first();
       await passwordInput.fill('Test123!@#');
-      const submitButton = page.locator('button[type="submit"]').first();
+      const submitButton = page.locator('button:has-text("Login"), button[type="submit"]').first();
+      await submitButton.waitFor({ state: 'visible', timeout: 10000 }).catch(() => {
+        console.warn('submit button not visible on login form');
+      });
       await submitButton.click();
       
       await Promise.race([

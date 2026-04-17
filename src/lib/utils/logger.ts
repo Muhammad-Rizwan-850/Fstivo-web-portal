@@ -20,6 +20,10 @@ class Logger {
   private isDevelopment = process.env.NODE_ENV === 'development';
   private minLevel: LogLevel = (process.env.LOG_LEVEL as LogLevel) || 'info';
 
+  // when tests run we normally suppress console output; this flag
+  // lets a caller (usually a unit test) override that behavior
+  private forceTestLogging = false;
+
   private levels: Record<LogLevel, number> = {
     debug: 0,
     info: 1,
@@ -29,12 +33,15 @@ class Logger {
   };
 
   // Allow reconfiguration for testing
-  configure(options: { isDevelopment?: boolean; minLevel?: LogLevel }) {
+  configure(options: { isDevelopment?: boolean; minLevel?: LogLevel; forceTestLogging?: boolean }) {
     if (options.isDevelopment !== undefined) {
       this.isDevelopment = options.isDevelopment;
     }
     if (options.minLevel !== undefined) {
       this.minLevel = options.minLevel;
+    }
+    if (options.forceTestLogging !== undefined) {
+      this.forceTestLogging = options.forceTestLogging;
     }
   }
 
@@ -93,7 +100,13 @@ class Logger {
 
     if (this.isDevelopment) {
       try {
-        if (!IS_TEST) console.log(formatted);
+        // in dev mode we normally write to console, but tests set
+        // NODE_ENV=test which prevents console.log via the IS_TEST
+        // constant above. allow tests to opt-in by setting
+        // forceTestLogging.
+        if (!IS_TEST || this.forceTestLogging) {
+          console.log(formatted);
+        }
       } catch (e) {
         // fallback: nothing else to do
       }
